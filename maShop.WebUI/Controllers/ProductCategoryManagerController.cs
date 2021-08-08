@@ -1,50 +1,45 @@
-﻿using System;
+﻿using maShop.DataAccess.InMemory;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using maShop.core.Models;
-using maShop.core.ViewModels;
-using maShop.DataAccess.InMemory;
 
 namespace maShop.WebUI.Controllers
 {
-    public class ProductManagerController : Controller
+    public class ProductCategoryManagerController : Controller
     {
-        ProductRepository context;
-        ProductCategoryRepository productCategories;
+        // GET: ProductCategory
+        ProductCategoryRepository context;
 
-        public ProductManagerController()
+        public ProductCategoryManagerController()
         {
-            context = new ProductRepository();
-            productCategories = new ProductCategoryRepository();
+            context = new ProductCategoryRepository();
         }
         // GET: Productmanager
         public ActionResult Index()
         {
-            IList<Product> products = context.Collection().ToList();
+            IList<ProductCategory> products = context.Collection().ToList();
             return View(products);
         }
 
         public ActionResult Create()
         {
-            ProductManagerViewModel viewModel = new ProductManagerViewModel();
-            
-            viewModel.Product = new Product();
-            viewModel.ProductCategories = productCategories.Collection();
-            return View(viewModel);
+            ProductCategory product = new ProductCategory();
+            return View(product);
         }
 
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(ProductCategory productCategory)
         {
             if (!ModelState.IsValid)
             {
-                return View(product);
+                return View(productCategory);
             }
             else
             {
-                context.Insert(product);
+                context.Insert(productCategory);
                 context.Commit();
                 return RedirectToAction("Index");
             }
@@ -52,26 +47,22 @@ namespace maShop.WebUI.Controllers
 
         public ActionResult Edit(string Id)
         {
-            Product product = context.Find(Id);
-            if(product == null)
+            ProductCategory productCategory = context.Find(Id);
+            if (productCategory == null)
             {
                 return HttpNotFound();
             }
             else
             {
-                ProductManagerViewModel viewModel = new ProductManagerViewModel();
-
-                viewModel.Product = product;
-                viewModel.ProductCategories = productCategories.Collection();
-                return View(viewModel);
+                return View(productCategory);
             }
         }
 
         [HttpPost]
         public ActionResult Edit(Product product, string Id)
         {
-            Product productToUpdate = context.Find(Id);
-            if(productToUpdate == null)
+            ProductCategory productCategoryToUpdate = context.Find(Id);
+            if (productCategoryToUpdate == null)
             {
                 return HttpNotFound();
             }
@@ -83,11 +74,7 @@ namespace maShop.WebUI.Controllers
                 }
                 else
                 {
-                    productToUpdate.Name = product.Name;
-                    productToUpdate.Category = product.Category;
-                    productToUpdate.Description = product.Description;
-                    productToUpdate.Price = product.Price;
-                    productToUpdate.Image = product.Image;
+                    productCategoryToUpdate.Category = product.Category;
                     //context.Update(product);
                     context.Commit();
                     return RedirectToAction("Index");
@@ -98,14 +85,14 @@ namespace maShop.WebUI.Controllers
 
         public ActionResult Delete(string Id)
         {
-            Product productToDelete = context.Find(Id);
-            if (productToDelete == null)
+            ProductCategory productCategoryToDelete = context.Find(Id);
+            if (productCategoryToDelete == null)
             {
                 return HttpNotFound();
             }
             else
             {
-                return View(productToDelete);
+                return View(productCategoryToDelete);
             }
         }
 
@@ -113,8 +100,8 @@ namespace maShop.WebUI.Controllers
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string Id)
         {
-            Product productToDelete = context.Find(Id);
-            if (productToDelete == null)
+            ProductCategory productCategoryToDelete = context.Find(Id);
+            if (productCategoryToDelete == null)
             {
                 return HttpNotFound();
             }
