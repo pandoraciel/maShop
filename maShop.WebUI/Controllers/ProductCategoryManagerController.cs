@@ -5,17 +5,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using maShop.core.Models;
+using maShop.core.Contracts;
 
 namespace maShop.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
         // GET: ProductCategory
-        InMemoryRepository<ProductCategory> context;
+        //InMemoryRepository<ProductCategory> context;
+        IRepository<ProductCategory> context;
 
-        public ProductCategoryManagerController()
+        public ProductCategoryManagerController(IRepository<ProductCategory> context)
         {
-            context = new InMemoryRepository<ProductCategory>();
+            this.context = context;
         }
         // GET: Productmanager
         public ActionResult Index()
