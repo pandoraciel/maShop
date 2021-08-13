@@ -17,5 +17,7 @@ namespace maShop.DataAccess.SQL
 
         public DbSet<Product> Product { get; set; }
         public DbSet<ProductCategory> ProductCategory { get; set; }
+        public DbSet<Basket> Basket { get; set; }
+        public DbSet<BasketItem> BasketItem { get; set; }
     }
 }
