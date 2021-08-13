@@ -1,5 +1,6 @@
 ﻿using maShop.core.Contracts;
 using maShop.core.Models;
+using maShop.core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,25 @@ namespace maShop.WebUI.Controllers
             //productCategories = new InMemoryRepository<ProductCategory>();
             productCategories = productCategoryContext;
         }
-        public ActionResult Index()
+        public ActionResult Index(string Category = null)
         {
-            List<Product> products = context.Collection().ToList();
-            return View(products);
+            List<Product> products;// = context.Collection().ToList();
+            List<ProductCategory> categories = productCategories.Collection().ToList();
+
+            if (Category == null)
+            {
+                products = context.Collection().ToList();
+            }
+            else
+            {
+                products = context.Collection().Where(p => p.Category == Category).ToList();
+            }
+
+            ProductListViewModel viewModel = new ProductListViewModel();
+            viewModel.Products = products;
+            viewModel.ProductCategories = categories;
+
+            return View(viewModel);
         }
 
         public ActionResult Detail(string Id)
